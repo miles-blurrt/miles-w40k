@@ -13,7 +13,7 @@ class PhaseShootingSpec extends ObjectBehavior
         $this->shouldHaveType(PhaseShooting::class);
     }
     
-    function it_resolves_shooting_phase(\Unit $FiringUnit, \RollingDice $RollingDice)
+    function it_resolves_hits(\Unit $FiringUnit, \RollingDice $RollingDice)
     {
 	    $RollingDice->getRolls(6)->willReturn([4,2,5,1,6,3]);
 	    $FiringUnit->unitShotHits([4,2,5,1,6,3])->willReturn
