@@ -2,11 +2,11 @@
 
 class CombatHit
 {
-	function __construct($FiringModel, $FiringWeapon, $TargetModel)
+	function __construct($FiringModel, $FiringWeapon, $TargetUnit)
     {
 	    $this->FiringModel = $FiringModel;
 		$this->FiringWeapon = $FiringWeapon;
-		$this->TargetModel = $TargetModel;
+		$this->TargetUnit = $TargetUnit;
     }
     
 	public function causesWound($weaponStrength,$targetToughness,$roll)
@@ -39,7 +39,7 @@ class CombatHit
 	
 	function getResult($roll)
 	{
-		if($this->causesWound($this->FiringWeapon->getStrength(),$this->TargetModel->getToughness(),$roll))
+		if($this->causesWound($this->FiringWeapon->getStrength(),$this->TargetUnit->getToughness(),$roll))
 			return('wound');
 		else
 			return('miss');

@@ -19,13 +19,7 @@ class ModelInfantry extends Model
 		return($this->armourSave);
 	}
 	
-    public function canMoveNormally()
-    {
-        if($this->isRetreating==true)
-        	return false;
-        	
-        return true;
-    }
+ 
     
     public function resolveCombatShot(CombatShot $CombatShot)
     {
@@ -42,6 +36,7 @@ class ModelInfantry extends Model
 	    	    
 	    return($CombatHit);
     }
+    
     
     
 	

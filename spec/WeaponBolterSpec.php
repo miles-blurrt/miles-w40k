@@ -12,4 +12,9 @@ class WeaponBolterSpec extends ObjectBehavior
     {
         $this->shouldHaveType(WeaponBolter::class);
     }
+    
+    function it_fires_two_shots_under_12_distance()
+    {
+	    $this->getShotsCount(3)->shouldEqual(2);
+    }
 }

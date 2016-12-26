@@ -12,4 +12,9 @@ class CombatWoundSpec extends ObjectBehavior
     {
         $this->shouldHaveType(CombatWound::class);
     }
+    
+    function let(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+    {
+   		$this->beConstructedWith($FiringModel,$FiringWeapon,$TargetModel);
+    }
 }

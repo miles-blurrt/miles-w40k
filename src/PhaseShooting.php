@@ -2,71 +2,74 @@
 
 class PhaseShooting
 {
-	var $shootingResult = [];
 	
-	public function __construct(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+	
+	public function __construct()
 	{
-		$this->FiringModel = $FiringModel;
-		$this->FiringWeapon = $FiringWeapon;
-		$this->TargetModel = $TargetModel;
 		
-		$this->CombatShot = new CombatShot($FiringModel);
-		$this->CombatHit = new CombatHit($FiringModel, $FiringWeapon, $TargetModel);
-		$this->CombatWound = new CombatWound($FiringModel, $FiringWeapon, $TargetModel);
+		
+		
 		
 		
 	}
 	
+	public function resolveUnitShooting($FiringUnit, $FiringWeapon, $TargetUnit, $RollingDice)
+	{
+		$result =
+		[
+			'enemy_dead' => 0	
+		];
+		
+		$shotCount = $FiringUnit->getUnitShotCount($FiringWeapon,$TargetUnit);
+		foreach($FiringUnit->getModelsCanShoot($FiringWeapon,$TargetUnit) as $FiringModel)
+		{
+			$hitsCount = $this->getHitsCount($TargetUnit,$RollingDice,$shotCount);
+			
+			$woundsCount = $this->getWoundsCount($FiringWeapon,$TargetUnit,$RollingDice,$hitsCount);
+			
+			$savesCount = $this->getSavesCount($FiringWeapon,$TargetUnit,$RollingDice,$woundsCount);
+			
+			$result['enemy_dead'] = $woundCount - $saveCount;
+			if($result['enemy_dead']<0)
+				$result['enemy_dead'] = 0;
+		}
+
+		return($result);
+	
+	}
 	
 	
-    public function resolveShotsToHitCount(array $rolls)
+	public function getHitsCount($FiringUnit,$RollingDice,int $shotCount)
+	{
+		$rolls = $RollingDice->getRolls($shotCount);
+		$hitResult = $FiringUnit->unitShotHits($rolls);
+		
+		$totalHits = $hitResult['hit'];
+		if($hitResult['extra_shot']>0)
+		{
+			$shots = $hitResult['extra_shot'];
+			$rolls = $this->getRolls($shotCount);
+			$hitResult = $FiringUnit->unitShotHits($rolls);
+			$totalHits += $hitResult['hit'];
+		}
+		
+		return($totalHits);
+	}
+	
+	public function getWoundsCount($FiringWeapon,$TargetUnit,$RollingDice,int $hitsCount)
+	{
+		$rolls = $RollingDice->getRolls($hitsCount);
+		$woundResult = $FiringUnit->unitShotWounds($FiringWeapon,$TargetUnit,$rolls);
+		
+		return($woundResult);
+	}
+
+    public function getSavesCount($FiringWeapon,$TargetUnit,$RollingDice,int $woundsCount)
     {
-	    $hits = 0;
-	    
-        foreach($rolls as $thisRoll)
-        {
-	        $hitResult = $this->CombatShot->getResult($thisRoll);
-	        if($hitResult=='extra_shot')
-	        	$hitResult = $this->CombatShot->getResult($thisRoll);
-	        	
-	        if($hitResult=='hit')
-	        	$hits++;
-        }
-        
-        return($hits);
-    }
-    
-    public function resolveHitsToWoundCount(array $rolls)
-    {
-	    $wounds = 0;
-	    
-        foreach($rolls as $thisRoll)
-        {
-	        $woundResult = $this->CombatHit->getResult($thisRoll);
-	        	
-	        if($woundResult=='wound')
-	        	$wounds++;
-        }
-        
-        return($wounds);
+	    $rolls = $RollingDice->getRolls($woundsCount);
+		$savesResult = $TargetUnit->unitSavesWounds($FiringWeapon,$rolls);
+		return($savesResult);
     }
 
-    public function resolveWoundSaves(array $rolls)
-    {
-	    $saves = 0;
-        
-        foreach($rolls as $thisRoll)
-        {
-	        $saveResult = $this->CombatWound->getResult($thisRoll);
-	        if($saveResult == 'saved')
-	        	$saves++;
-        }
-        
-        return $saves;
-    }
 
-    public function getShootingResult()
-    {
-        // TODO: write logic here
-    }
 }
