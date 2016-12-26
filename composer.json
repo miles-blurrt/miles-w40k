@@ -1,0 +1,19 @@
+{
+    "name": "miles/miles-w40k",
+    "description": "A helpful guide to play the game for beginners like me",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Miles Cook",
+            "email": "cook2909@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpspec/phpspec": "^3.2"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "autoload": {"psr-0": {"": "src"}}
+}
