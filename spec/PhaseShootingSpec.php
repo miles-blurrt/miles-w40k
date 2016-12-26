@@ -13,10 +13,11 @@ class PhaseShootingSpec extends ObjectBehavior
         $this->shouldHaveType(PhaseShooting::class);
     }
     
+    /*
     function it_resolves_hits(\Unit $FiringUnit, \RollingDice $RollingDice)
     {
 	    $RollingDice->getRolls(6)->willReturn([4,2,5,1,6,3]);
-	    $FiringUnit->unitShotHits([4,2,5,1,6,3])->willReturn
+	    $FiringUnit->unitShootingResult([4,2,5,1,6,3])->willReturn
 	    (
 		    [
 			    'extra_shot' => 0,
@@ -27,7 +28,7 @@ class PhaseShootingSpec extends ObjectBehavior
 	    
 	    $this->getHitsCount($FiringUnit,$RollingDice,6)->shouldReturn(3);
     }
-    
+    */
 
     /*
     function let(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)

@@ -7,19 +7,16 @@ class Unit
 	public function __construct(array $ModelArray=null)
 	{
 		$this->ModelArray = $ModelArray;
+		
 	}
 	
-	public function getUnitShotCount(Weapon $FiringWeapon, Unit $TargetUnit)
-    {
-	    $shotCount = 0;
-	    foreach($this->getModelsCanShoot($FiringWeapon,$TargetUnit) as $thisModel)
-	    {
-		    $shotCount+=$thisModel->getWeaponShotCount($FiringWeapon,$TargetUnit);
-	    }
-	    
-	    return($shotCount);
-	    	
-    }
+	public function engageRangedCombat(Weapon $FiringWeapon, Unit $TargetUnit)
+	{
+		$this->Combat = new Combat($this,$FiringWeapon,$TargetUnit);
+		return($this->Combat->resolveResult());
+	}
+	
+	
     
     public function getModelsCanShoot(Weapon $FiringWeapon, Unit $TargetUnit)
     {
@@ -38,26 +35,7 @@ class Unit
 	    return($ModelArray);
     }
     
-    public function unitShotHits($rolls)
-	{
-		$CombatShot = new CombatShot($this);
-		
-		$shootingResult = 
-	    [
-		    'extra_shot' => 0,
-		    'hit' => 0,		    
-		    'miss' => 0
-	    ];
-	    
-        foreach($rolls as $thisRoll)
-        {
-	        $shootingResult[$CombatShot->getResult($thisRoll)]++;;
-	        
-        }
-        
-        return($shootingResult);
-        
-	}
+    
 	
 	public function unitShotWounds($FiringWeapon,$TargetUnit,$rolls)
 	{

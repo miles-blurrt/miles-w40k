@@ -6,10 +6,7 @@ class PhaseShooting
 	
 	public function __construct()
 	{
-		
-		
-		
-		
+
 		
 	}
 	
@@ -39,37 +36,9 @@ class PhaseShooting
 	}
 	
 	
-	public function getHitsCount($FiringUnit,$RollingDice,int $shotCount)
-	{
-		$rolls = $RollingDice->getRolls($shotCount);
-		$hitResult = $FiringUnit->unitShotHits($rolls);
-		
-		$totalHits = $hitResult['hit'];
-		if($hitResult['extra_shot']>0)
-		{
-			$shots = $hitResult['extra_shot'];
-			$rolls = $this->getRolls($shotCount);
-			$hitResult = $FiringUnit->unitShotHits($rolls);
-			$totalHits += $hitResult['hit'];
-		}
-		
-		return($totalHits);
-	}
 	
-	public function getWoundsCount($FiringWeapon,$TargetUnit,$RollingDice,int $hitsCount)
-	{
-		$rolls = $RollingDice->getRolls($hitsCount);
-		$woundResult = $FiringUnit->unitShotWounds($FiringWeapon,$TargetUnit,$rolls);
-		
-		return($woundResult);
-	}
-
-    public function getSavesCount($FiringWeapon,$TargetUnit,$RollingDice,int $woundsCount)
-    {
-	    $rolls = $RollingDice->getRolls($woundsCount);
-		$savesResult = $TargetUnit->unitSavesWounds($FiringWeapon,$rolls);
-		return($savesResult);
-    }
+	
+	
 
 
 }
