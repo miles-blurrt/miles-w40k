@@ -14,7 +14,7 @@ class CombatHit
 		$minRollRequired = 0;
 		
 		if($weaponStrength==$targetToughness)
-			$minRollRequired == 4;
+			$minRollRequired = 4;
 		else
 		{
 			if($weaponStrength<$targetToughness)
@@ -32,7 +32,8 @@ class CombatHit
 		
 		if($minRollRequired>6)
 			$minRollRequired = 6;
-				
+		
+			
 		return($roll>=$minRollRequired);
 	}
 	

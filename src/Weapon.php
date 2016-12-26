@@ -8,4 +8,9 @@ abstract class Weapon
 	{
 		return($this->strength);
 	}
+	
+	public function getAP()
+	{
+		return($this->ap);
+	}
 }

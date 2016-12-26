@@ -2,14 +2,22 @@
 
 class ModelInfantry extends Model
 {
-	public $isRetreating = false;
-	public $toughness = 0;
-	public $ballisticSkill = 0;
+	private $isRetreating = false;
+	private $toughness = 0;
+	private $armourSave = 0;
+	private $ballisticSkill = 0;
 	
 	
 	
+	public function getToughness()
+	{
+		return($this->toughness);
+	}
 	
-	
+	public function getArmourSave()
+	{
+		return($this->armourSave);
+	}
 	
     public function canMoveNormally()
     {

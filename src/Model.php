@@ -3,15 +3,21 @@
 abstract class Model
 {
 	private $ballisticSkill = 0;
-	private $toughness = 0;
+	private $aliveCount = 0;
 	
+	public function setAliveCount($aliveCount)
+	{
+		$this->aliveCount = $aliveCount;
+	}
+	
+	public function getAliveCount()
+	{
+		return($this->aliveCount);
+	}
 	public function getBallisticSkill()
 	{
 		return($this->ballisticSkill);
 	}
 	
-	public function getToughness()
-	{
-		return($this->toughness);
-	}
+	
 }

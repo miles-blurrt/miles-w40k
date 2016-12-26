@@ -25,6 +25,8 @@ class CombatHitSpec extends ObjectBehavior
 	    $this->causesWound(4,5,4)->shouldReturn(false);
 	    $this->causesWound(4,5,5)->shouldReturn(true);
 	    $this->causesWound(5,5,4)->shouldReturn(true);
+	    
+	    $this->causesWound(4,4,2)->shouldReturn(false);
     }
     
     function it_resolves_a_wound_result(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)

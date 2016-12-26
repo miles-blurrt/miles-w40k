@@ -2,5 +2,6 @@
 
 class WeaponBolter extends Weapon
 {
-	public $strength = 4;
+	private $strength = 4;
+	private $ap = 5;
 }
