@@ -14,7 +14,7 @@ class Combat
 		$this->FiringWeapon = $FiringWeapon;
 		$this->TargetUnit = $TargetUnit;
 	    
-	    if($this->FiringUnit->getBallisticSkill()>=6)
+	    if($this->FiringUnit->getUnitBallisticSkill()>=6)
 	    	$this->hasBSExtraShot = true;
 	    	
 	    if($RollingDice==null)
@@ -29,10 +29,10 @@ class Combat
 	    [
 			'enemy_dead' => 0  
 	    ];
-	    $FiringModels = $this->FiringUnit->getModelsCanShoot($FiringWeapon,$TargetUnit);
-	    $totalShots = $this->getShotCount($FiringModels);
-	    $hitResult = $this->getHitResult($totalShots);
-	    $totalWounds = $this->getWoundsCount($hitResult['hit']);
+	    
+	    $totalShots = $this->FiringUnit->getWeaponShotCount($this->FiringWeapon);
+	    $hitResult = $this->getHitResults($totalShots);
+	    $totalWounds = $this->getWoundsCount($hitResult['hits']);
 	    $totalSaves = $this->getSavesCount($totalWounds);
 	    $kills = $totalWounds - $totalSaves;
 	    
@@ -46,73 +46,25 @@ class Combat
 	    return($result);
 	    
 	}
-	
-	public function getShotCount(array $FiringModels)
-    {
-	    $shotCount = 0;
-	    foreach($FiringModels as $Model)
-	    {
-		    $shotCount+=$Model->getWeaponShotCount($FiringWeapon,$TargetUnit);
-	    }
-	    
-	    return($shotCount);
-	    	
-    }
-    
-	public function getHitResult($totalShots)
+
+	public function getHitResults($totalShots)
 	{
 		$shootingResult = 
 	    [
-		    'extra_shot' => 0,
-		    'hit' => 0,		    
-		    'miss' => 0
+		    'extra_shots' => 0,
+		    'hits' => 0,		    
+		    'misses' => 0
 	    ];
 	    
         foreach($this->RollingDice->getRolls($totalShots) as $thisRoll)
         {
 	        $shootingResult[$this->getShotResult($thisRoll)]++;;
-	        
         }
         
         return($shootingResult);
         
 	}
-	
-	public function getWoundsCount(int $hitsCount)
-	{
-		$rolls = $this->RollingDice->getRolls($hitsCount);
-		$woundResult = $this->FiringUnit->unitShotWounds($this->FiringWeapon,$this->TargetUnit,$rolls);
-		
-		return($woundResult);
-	}
 
-    public function getSavesCount(int $woundsCount)
-    {
-	    $rolls = $this->RollingDice->getRolls($woundsCount);
-		$savesResult = $this->TargetUnit->unitSavesWounds($this->FiringWeapon,$rolls);
-		return($savesResult);
-    }
-    
-    
-    
-    /*
-    public function getHitsCount()
-	{
-		//$rolls = $RollingDice->getRolls($shotCount);
-		$hitResult = $FiringUnit->unitShootingResult();
-		
-		$totalHits = $hitResult['hit'];
-		if($hitResult['extra_shot']>0)
-		{
-			$shots = $hitResult['extra_shot'];
-			$rolls = $this->getRolls($shotCount);
-			$hitResult = $FiringUnit->unitShootingResult($rolls);
-			$totalHits += $hitResult['hit'];
-		}
-		
-		return($totalHits);
-	}
-	*/
 	public function shotHits($roll,$modelBallisticSkill)
 	{
 		if($roll==1)
@@ -135,11 +87,9 @@ class Combat
 		return($roll>=$minRollRequired);
 	}
 	
-	
-	
 	public function getShotResult($roll)
 	{
-		if($this->shotHits($roll,$this->FiringUnit->getBallisticSkill()))
+		if($this->shotHits($roll,$this->FiringUnit->getUnitBallisticSkill()))
 			return('hit');
 		
 		if($this->hasBSExtraShot && !($this->usedBSExtraShot))
@@ -175,17 +125,8 @@ class Combat
 		
 		if($minRollRequired>6)
 			$minRollRequired = 6;
-		
 			
 		return($roll>=$minRollRequired);
-	}
-	
-	function getWoundResult($roll)
-	{
-		if($this->causesWound($this->FiringWeapon->getStrength(),$this->TargetUnit->getToughness(),$roll))
-			return('wound');
-		else
-			return('miss');
 	}
 	
 	public function savesWound($weaponStrength,$targetSave,$roll)
@@ -216,15 +157,36 @@ class Combat
 		return($roll>=$minRollRequired);
 	}
 	
-	/*
-	public function getSaveResult($roll)
+	public function getWoundsCount(int $hitsCount)
 	{
-		if($this->savesWound($this->FiringWeapon->getStrength(),$this->TargetModel->getArmourSave(),$roll))
-			return('save');
-		else
-			return('wound');
+		$rolls = $this->RollingDice->getRolls($hitsCount);
+		
+		$woundsCount = 0;
+	    
+        foreach($rolls as $thisRoll)
+        {
+	        $woundResult = $this->causesWound($this->FiringWeapon->getStrength(),$this->TargetUnit->getToughness(),$thisRoll);
+	        	
+	        if($woundResult=='wound')
+	        	$woundsCount++;
+        }
+        
+        return($woundsCount);
 	}
-	*/
 	
-	
+	public function getSavesCount($woundsCount)
+	{
+		$rolls = $this->RollingDice->getRolls($woundsCount);
+		
+		$saves = 0;
+        
+        foreach($rolls as $thisRoll)
+        {
+	        $saveResult = $this->savesWound($this->FiringWeapon->getStrength(),$this->TargetModel->getArmourSave(),$thisRoll);
+	        if($saveResult == 'save')
+	        	$saves++;
+        }
+        
+        return $saves;
+	}
 }

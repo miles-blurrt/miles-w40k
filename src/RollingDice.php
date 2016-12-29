@@ -7,7 +7,7 @@ class RollingDice
 		$result = [];
 		do
 		{
-			$result[] = rand(rand(1,$die));
+			$result[] = rand(1,$die);
 			$rolls--;
 			
 		} while ($rolls>0);

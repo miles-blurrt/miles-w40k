@@ -10,14 +10,6 @@ class Unit
 		
 	}
 	
-	public function engageRangedCombat(Weapon $FiringWeapon, Unit $TargetUnit)
-	{
-		$this->Combat = new Combat($this,$FiringWeapon,$TargetUnit);
-		return($this->Combat->resolveResult());
-	}
-	
-	
-    
     public function getModelsCanShoot(Weapon $FiringWeapon, Unit $TargetUnit)
     {
 	    $Models = [];
@@ -35,36 +27,21 @@ class Unit
 	    return($ModelArray);
     }
     
-    
-	
-	public function unitShotWounds($FiringWeapon,$TargetUnit,$rolls)
-	{
-		$CombatHit = new CombatHit($this,$FiringWeapon,$TargetUnit);
-		$woundsCount = 0;
+    public function getWeaponShotCount($FiringWeapon,$TargetUnit)
+    {
+	    $shotCount = 0;
+	    foreach($this->FiringModels->getModelsCanShoot($FiringWeapon, $TargetUnit) as $Model)
+	    {
+		    $shotCount+=$Model->getWeaponShotCount($FiringWeapon,$TargetUnit);
+	    }
 	    
-        foreach($rolls as $thisRoll)
-        {
-	        $woundResult = $CombatHit->getResult($thisRoll);
-	        	
-	        if($woundResult=='wound')
-	        	$woundsCount++;
-        }
-        
-        return($woundsCount);
+	    return($shotCount);
+    }
+	
+	public function getUnitBallisticSkill()
+	{
+		// @TODO: Resolve to the most common BS in the unit
+		$this->ModelArray[0]->getBallisticSkill();	
 	}
 	
-	public function unitSavesWounds($FiringWeapon,$rolls)
-	{
-		$CombatWound = new CombatWound($FiringWeapon,$this);
-		$saves = 0;
-        
-        foreach($rolls as $thisRoll)
-        {
-	        $saveResult = $CombatWound->getResult($thisRoll);
-	        if($saveResult == 'save')
-	        	$saves++;
-        }
-        
-        return $saves;
-	}
 }

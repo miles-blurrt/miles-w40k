@@ -9,9 +9,9 @@ use Prophecy\Argument;
 class CombatSpec extends ObjectBehavior
 {
     
-   function let(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+   function let(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
    {
-   		$this->beConstructedWith($FiringModel,$FiringWeapon,$TargetModel);
+   		$this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
    }
    
     
@@ -25,29 +25,29 @@ class CombatSpec extends ObjectBehavior
 	    $this->shotHits(4,3)->shouldReturn(true);
     }
     
-    function it_resolves_hits(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+    function it_resolves_hits(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
     {
-	    $FiringModel->getBallisticSkill()->willReturn(4);
+	    $FiringUnit->getUnitBallisticSkill()->willReturn(4);
 	    
-	    $this->beConstructedWith($FiringModel,$FiringWeapon,$TargetModel);
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
 	    $this->getShotResult(3)->shouldReturn('hit');
 	    $this->getShotResult(2)->shouldReturn('miss');
     }
     
     
-    function it_resolves_high_bs_miss(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+    function it_resolves_high_bs_miss(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
     {
-	    $FiringModel->getBallisticSkill()->willReturn(7);
-	    $this->beConstructedWith($FiringModel,$FiringWeapon,$TargetModel);
+	    $FiringUnit->getUnitBallisticSkill()->willReturn(7);
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
 	    $this->getShotResult(1)->shouldReturn('extra_shot');
 	    $this->getShotResult(4)->shouldReturn('miss');
     }
     
-    function it_resolves_high_bs_hit(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+    function it_resolves_high_bs_hit(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
     {
     	// Hits second chance
-	    $FiringModel->getBallisticSkill()->willReturn(7);
-	    $this->beConstructedWith($FiringModel,$FiringWeapon,$TargetModel);
+	    $FiringUnit->getUnitBallisticSkill()->willReturn(7);
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
 	    $this->getShotResult(1)->shouldReturn('extra_shot');
 	    $this->getShotResult(5)->shouldReturn('hit');
     }
@@ -66,10 +66,14 @@ class CombatSpec extends ObjectBehavior
 	    $this->causesWound(4,4,2)->shouldReturn(false);
     }
     
-    function it_resolves_a_wound_result(\ModelInfantry $FiringModel, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel)
+    function it_resolves_a_wound_result(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \ModelInfantry $TargetModel, \RollingDice $RollingDice)
     {
 	    $FiringWeapon->getStrength()->willReturn(5);
-	    $TargetModel->getToughness()->willReturn(4);
-	    $this->getWoundResult(4)->shouldReturn('wound');
+	    $TargetModel->getToughness()->willReturn(5);
+	    $RollingDice->getRolls(3)->willReturn([2,4,3]);
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetModel,$RollingDice);
+	    $this->getWoundsCount(3)->shouldReturn(1);
     }
+    
+  
 }
