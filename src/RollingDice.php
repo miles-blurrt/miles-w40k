@@ -7,11 +7,16 @@ class RollingDice
 		$result = [];
 		do
 		{
-			$result[] = rand(1,$die);
+			$result[] = $this->getRoll($die);
 			$rolls--;
 			
 		} while ($rolls>0);
 		
 		return($result);
+	}
+	
+	public function getRoll($die=6)
+	{
+		return(rand(1,$die));
 	}
 }

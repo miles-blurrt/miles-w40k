@@ -4,9 +4,14 @@ class Unit
 {
 	private $ModelArray = [];
 	
-	public function __construct(array $ModelArray=null)
+	public function __construct(array $ModelArray=null,$RollingDice=null)
 	{
 		$this->ModelArray = $ModelArray;
+		
+		if($RollingDice==null)
+			$this->RollingDice = new RollingDice();
+		else
+			$this->RollingDice = $RollingDice;
 		
 	}
 	
@@ -24,13 +29,13 @@ class Unit
     
     public function getModels()
     {
-	    return($ModelArray);
+	    return($this->ModelArray);
     }
     
     public function getWeaponShotCount($FiringWeapon,$TargetUnit)
     {
 	    $shotCount = 0;
-	    foreach($this->FiringModels->getModelsCanShoot($FiringWeapon, $TargetUnit) as $Model)
+	    foreach($this->getModelsCanShoot($FiringWeapon, $TargetUnit) as $Model)
 	    {
 		    $shotCount+=$Model->getWeaponShotCount($FiringWeapon,$TargetUnit);
 	    }
@@ -43,5 +48,30 @@ class Unit
 		// @TODO: Resolve to the most common BS in the unit
 		$this->ModelArray[0]->getBallisticSkill();	
 	}
+	
+	public function getUnitLeadership()
+	{
+		// @TODO: Resolve to the highest leadership in the unit
+		$highestLeadership = 0;
+		foreach($this->ModelArray as $Model)
+		{
+			$modelLeadership = $Model->getLeadership();	
+			if($modelLeadership>$highestLeadership)
+				$highestLeadership = $modelLeadership;
+		}
+		
+		return($modelLeadership);
+	}
+	
+	public function passesLeadershipTest()
+	{
+		$roll = $this->RollingDice->getRoll(12);
+		if($roll<=$this->getUnitLeadership())
+			return(true);
+		else
+			return(false);
+	}
+	
+	
 	
 }

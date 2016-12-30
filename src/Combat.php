@@ -23,7 +23,7 @@ class Combat
 			$this->RollingDice = $RollingDice;
     }
     
-    public function resolveResult()
+    public function resolveRangedResult()
     {
 	    $result = 
 	    [
@@ -189,4 +189,6 @@ class Combat
         
         return $saves;
 	}
+	
+	
 }

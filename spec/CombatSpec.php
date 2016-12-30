@@ -75,5 +75,7 @@ class CombatSpec extends ObjectBehavior
 	    $this->getWoundsCount(3)->shouldReturn(1);
     }
     
+    
+    
   
 }
