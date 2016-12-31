@@ -34,7 +34,7 @@ class CombatClose
 		if($roll==1)
 			return(false);
 		
-		$minRollRequired = 7 - $this->FiringUnit->getWeaponSkill();
+		$minRollRequired = 7 - $this->FiringUnit->getUnitWeaponSkill();
 		
 		if($minRollRequired<2)
 			$minRollRequired = 2;

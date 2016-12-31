@@ -44,6 +44,28 @@ class UnitSpec extends ObjectBehavior
 		$this->passesLeadershipTest()->shouldReturn(true);
     }
     
+    function it_returns_most_common_weapon_skill(\Model $ModelA, \Model $ModelB, \Model $ModelC)
+    {
+	    $ModelA->getWeaponSkill()->willReturn(4);
+	    $ModelB->getWeaponSkill()->willReturn(3);
+	    $ModelC->getWeaponSkill()->willReturn(4);
+	    $FiringModels = [$ModelA,$ModelB,$ModelC];
+	    
+	    $this->beConstructedWith($FiringModels);    
+		$this->getUnitWeaponSkill()->shouldReturn(4);
+    }
+    
+    function it_returns_most_common_weapon_skill_2(\Model $ModelA, \Model $ModelB, \Model $ModelC)
+    {
+	    $ModelA->getWeaponSkill()->willReturn(3);
+	    $ModelB->getWeaponSkill()->willReturn(3);
+	    $ModelC->getWeaponSkill()->willReturn(4);
+	    $FiringModels = [$ModelA,$ModelB,$ModelC];
+	    
+	    $this->beConstructedWith($FiringModels);    
+		$this->getUnitWeaponSkill()->shouldReturn(3);
+    }
+    
     function it_returns_min_distance(\Model $ModelA, \Model $ModelB, \Model $TargetA, \Model $TargetB)
     {
 	   $this->beConstructedWith([$ModelA,$ModelB]);

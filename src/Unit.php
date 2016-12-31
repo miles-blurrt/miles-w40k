@@ -22,16 +22,42 @@ class Unit
 	    return($this->ModelArray);
     }
     
-    public function getWeaponSkill()
+    public function getUnitWeaponSkill()
     {
-	    // @TODO: Resolve to the most common WS in the unit
-		$this->ModelArray[0]->getWeaponSkill();
+	    $weaponSkillCount = [];
+	    foreach($this->getModels() as $Model)
+	    {
+		    $weaponSkill = $Model->getWeaponSkill();
+		    if(!isset($weaponSkillCount[$weaponSkill]))
+		    	$weaponSkillCount[$weaponSkill]=1;
+		    else
+		    	$weaponSkillCount[$weaponSkill]++;
+	    }
+		
+		arsort($weaponSkillCount);
+		reset($weaponSkillCount);
+		$mostCommon = key($weaponSkillCount);
+		
+		return($mostCommon);
     }
 	
 	public function getUnitBallisticSkill()
 	{
-		// @TODO: Resolve to the most common BS in the unit
-		$this->ModelArray[0]->getBallisticSkill();	
+		$ballisticSkillCount = [];
+	    foreach($this->getModels() as $Model)
+	    {
+		    $ballisticSkill = $Model->getBallisticSkill();
+		    if(!isset($ballisticSkillCount[$ballisticSkill]))
+		    	$ballisticSkillCount[$ballisticSkill]=1;
+		    else
+		    	$ballisticSkillCount[$ballisticSkill]++;
+		}
+		
+		arsort($ballisticSkillCount);
+		reset($ballisticSkillCount);
+		$mostCommon = key($ballisticSkillCount);
+		
+		return($mostCommon);
 	}
 	
 	public function getUnitLeadership()

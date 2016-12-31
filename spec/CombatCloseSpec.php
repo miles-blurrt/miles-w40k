@@ -45,7 +45,7 @@ class CombatCloseSpec extends ObjectBehavior
     {
 	    $this->beConstructedWith($FiringUnit,null,$TargetUnit,$RollingDice);
 	    
-	    $FiringUnit->getWeaponSkill()->willReturn(4);
+	    $FiringUnit->getUnitWeaponSkill()->willReturn(4);
 	    $RollingDice->getRoll()->willReturn(5);
 	    $this->closeCombatHits()->shouldReturn(true);
 	    
