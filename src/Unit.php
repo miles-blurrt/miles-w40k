@@ -86,7 +86,22 @@ class Unit
 	    return($shotCount);
 	}
 	
-	public function minChargeRequired($TargetUnit)
+	public function minDistance($TargetUnit)
+	{
+		$minDistance = 100;
+		foreach($this->getModels() as $thisModel)
+		{
+			foreach($TargetUnit->getModels() as $targetmodel)
+			{
+				if($thisModel->getDistance($targetmodel) < $minDistance)
+					$minDistance = $minDistance;
+			}
+		}
+		
+		return($minDistance);
+	}
+	
+	public function advanceToBaseContact($TargetUnit,$distance)
 	{
 		
 	}

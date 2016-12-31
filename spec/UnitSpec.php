@@ -43,4 +43,17 @@ class UnitSpec extends ObjectBehavior
 		$this->beConstructedWith($FiringModels,$RollingDice);    
 		$this->passesLeadershipTest()->shouldReturn(true);
     }
+    
+    function it_returns_min_distance(\Model $ModelA, \Model $ModelB, \Model $TargetA, \Model $TargetB)
+    {
+	   $this->beConstructedWith([$ModelA,$ModelB]);
+	   
+	   $ModelA->getDistance($TargetA)->willReturn(5);
+	   $ModelA->getDistance($TargetB)->willReturn(3);
+	   
+	   $ModelB->getDistance($TargetA)->willReturn(2); 
+	   $ModelB->getDistance($TargetB)->willReturn(6); 
+	   
+	   
+    }
 }

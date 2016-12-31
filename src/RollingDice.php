@@ -19,4 +19,13 @@ class RollingDice
 	{
 		return(rand(1,$die));
 	}
+	
+	public function getRollsTotal($rolls)
+	{
+		$rollTotal = 0;
+		foreach($this->getRoll() as $roll)
+			$rollTotal+=$roll;
+			
+		return($rollTotal);
+	}
 }

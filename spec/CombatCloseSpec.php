@@ -21,7 +21,25 @@ class CombatCloseSpec extends ObjectBehavior
     function it_determines_successful_charge(\Unit $FiringUnit, \Unit $TargetUnit,\RollingDice $RollingDice)
     {
 	    $this->beConstructedWith($FiringUnit,null,$TargetUnit,$RollingDice);
-	    $minDistance = $FiringUnit->minChargeRequired($TargetUnit);
+	    
+	    $FiringUnit->minDistance($TargetUnit)->willReturn(5);
+	    
+	    $RollingDice->getRollsTotal(2)->willReturn(7);
+	    $FiringUnit->advanceToBaseContact($TargetUnit,7)->shouldBeCalled();
+	    $this->chargeSuccessfull()->shouldReturn(true);
 	    
     }
+    
+    function it_determines_unsuccessful_charge(\Unit $FiringUnit, \Unit $TargetUnit,\RollingDice $RollingDice)
+    {
+	    $this->beConstructedWith($FiringUnit,null,$TargetUnit,$RollingDice);
+	    
+	    $FiringUnit->minDistance($TargetUnit)->willReturn(5);
+	    
+	    $RollingDice->getRollsTotal(2)->willReturn(4);
+	    $FiringUnit->advanceToBaseContact($TargetUnit,4)->shouldNotBeCalled();
+	    $this->chargeSuccessfull()->shouldReturn(false);
+	    
+    }
+    
 }
