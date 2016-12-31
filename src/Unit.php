@@ -15,32 +15,17 @@ class Unit
 		
 	}
 	
-    public function getModelsCanShoot(Weapon $FiringWeapon, Unit $TargetUnit)
-    {
-	    $Models = [];
-	    foreach($this->getModels() as $Model)
-	    {
-		    if($Model->hasWeapon($FiringWeapon))
-		    	$Models[] = $Model;
-	    }
-	    
-	    return($Models);
-    }
+   
     
     public function getModels()
     {
 	    return($this->ModelArray);
     }
     
-    public function getWeaponShotCount($FiringWeapon,$TargetUnit)
+    public function getWeaponSkill()
     {
-	    $shotCount = 0;
-	    foreach($this->getModelsCanShoot($FiringWeapon, $TargetUnit) as $Model)
-	    {
-		    $shotCount+=$Model->getWeaponShotCount($FiringWeapon,$TargetUnit);
-	    }
-	    
-	    return($shotCount);
+	    // @TODO: Resolve to the most common WS in the unit
+		$this->ModelArray[0]->getWeaponSkill();
     }
 	
 	public function getUnitBallisticSkill()
@@ -73,18 +58,7 @@ class Unit
 	}
 	
 	
-	public function getOverwatchShotCount($TargetUnit)
-	{
-		$shotCount = 0;
-		foreach($this->ModelArray as $Model)
-		{
-			if($Model->canOverwatchUnit($TargetUnit))
-				$shotCount++;
-		}
-		
-	    
-	    return($shotCount);
-	}
+	
 	
 	public function minDistance($TargetUnit)
 	{

@@ -9,9 +9,9 @@ use Prophecy\Argument;
 class CombatRangedSpec extends ObjectBehavior
 {
     
-   function let(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
+   function let(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit,\RollingDice $RollingDice)
    {
-   		$this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
+   		$this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit,$RollingDice);
    }
    
     
@@ -25,31 +25,37 @@ class CombatRangedSpec extends ObjectBehavior
 	    $this->shotHits(4,3)->shouldReturn(true);
     }
     
-    function it_resolves_hits(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
+    function it_resolves_hits(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit,\RollingDice $RollingDice)
     {
 	    $FiringUnit->getUnitBallisticSkill()->willReturn(4);
 	    
-	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
-	    $this->getShotResult(3)->shouldReturn('hit');
-	    $this->getShotResult(2)->shouldReturn('miss');
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit,$RollingDice);
+	    $RollingDice->getRoll()->willReturn(3);
+	    $this->getShotResult()->shouldReturn('hit');
+	    $RollingDice->getRoll()->willReturn(2);
+	    $this->getShotResult()->shouldReturn('miss');
     }
     
     
-    function it_resolves_high_bs_miss(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
+    function it_resolves_high_bs_miss(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit,\RollingDice $RollingDice)
     {
 	    $FiringUnit->getUnitBallisticSkill()->willReturn(7);
-	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
-	    $this->getShotResult(1)->shouldReturn('extra_shot');
-	    $this->getShotResult(4)->shouldReturn('miss');
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit,$RollingDice);
+		$RollingDice->getRoll()->willReturn(1);
+	    $this->getShotResult()->shouldReturn('extra_shot');
+	    $RollingDice->getRoll()->willReturn(4);
+	    $this->getShotResult()->shouldReturn('miss');
     }
     
-    function it_resolves_high_bs_hit(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit)
+    function it_resolves_high_bs_hit(\Unit $FiringUnit, \WeaponBolter $FiringWeapon, \Unit $TargetUnit,\RollingDice $RollingDice)
     {
     	// Hits second chance
 	    $FiringUnit->getUnitBallisticSkill()->willReturn(7);
-	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit);
-	    $this->getShotResult(1)->shouldReturn('extra_shot');
-	    $this->getShotResult(5)->shouldReturn('hit');
+	    $this->beConstructedWith($FiringUnit,$FiringWeapon,$TargetUnit,$RollingDice);
+	    $RollingDice->getRoll()->willReturn(1);
+	    $this->getShotResult()->shouldReturn('extra_shot');
+	    $RollingDice->getRoll()->willReturn(5);
+	    $this->getShotResult()->shouldReturn('hit');
     }
     
     

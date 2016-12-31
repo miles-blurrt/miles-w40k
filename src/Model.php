@@ -3,6 +3,7 @@
 class Model
 {
 	private $ballisticSkill = 0;
+	private $weaponSkill = 0;
 	private $leadership = 0;
 	private $aliveCount = 0;
 	private $WeaponsArray = [];
@@ -84,6 +85,11 @@ class Model
 	public function getBallisticSkill()
 	{
 		return($this->ballisticSkill);
+	}
+	
+	public function getWeaponSkill()
+	{
+		return($this->weaponSkill);
 	}
 	
 	public function getLeadership()

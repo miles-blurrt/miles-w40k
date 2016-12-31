@@ -26,4 +26,19 @@ class CombatClose
 	    else
 	    	return(false);
     }
+    
+    public function closeCombatHits()
+	{
+		$roll = $this->RollingDice->getRoll();
+		
+		if($roll==1)
+			return(false);
+		
+		$minRollRequired = 7 - $this->FiringUnit->getWeaponSkill();
+		
+		if($minRollRequired<2)
+			$minRollRequired = 2;
+					
+		return($roll>=$minRollRequired);
+	}
 }

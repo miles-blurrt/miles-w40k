@@ -23,14 +23,14 @@ class CombatRanged extends Combat
 			$this->RollingDice = $RollingDice;
     }
     
-    public function resolveRangedResult()
+    public function resolveShootingResult()
     {
 	    $result = 
 	    [
 			'enemy_dead' => 0  
 	    ];
 	    
-	    $totalShots = $this->FiringUnit->getWeaponShotCount($this->FiringWeapon);
+	    $totalShots = $this->getWeaponShotCount();
 	    $hitResult = $this->getHitResults($totalShots);
 	    $totalWounds = $this->getWoundsCount($hitResult['hits']);
 	    $totalSaves = $this->getSavesCount($totalWounds);
@@ -89,9 +89,11 @@ class CombatRanged extends Combat
 		return($roll>=$minRollRequired);
 	}
 	
-	public function getShotResult($roll)
+	public function getShotResult()
 	{
-		if($this->shotHits($roll,$this->FiringUnit->getUnitBallisticSkill()))
+		$rollResult = $this->RollingDice->getRoll();
+		
+		if($this->shotHits($rollResult,$this->FiringUnit->getUnitBallisticSkill()))
 			return('hit');
 		
 		if($this->hasBSExtraShot && !($this->usedBSExtraShot))
@@ -105,6 +107,39 @@ class CombatRanged extends Combat
 	}
 	
 	
+	public function getOverwatchShotCount()
+	{
+		$shotCount = 0;
+		foreach($this->FiringUnit->getModels() as $Model)
+		{
+			if($Model->canOverwatchUnit($TargetUnit))
+				$shotCount++;
+		}
+
+	    return($shotCount);
+	}
 	
+	public function getWeaponShotCount()
+    {
+	    $shotCount = 0;
+	    foreach($this->getModelsCanShoot() as $Model)
+	    {
+		    $shotCount+=$Model->getWeaponShotCount($FiringWeapon,$TargetUnit);
+	    }
+	    
+	    return($shotCount);
+    }
+    
+    public function getModelsCanShoot()
+    {
+	    $Models = [];
+	    foreach($this->getModels() as $Model)
+	    {
+		    if($Model->hasWeapon($FiringWeapon))
+		    	$Models[] = $Model;
+	    }
+	    
+	    return($Models);
+    }
 	
 }

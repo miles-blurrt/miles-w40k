@@ -39,6 +39,18 @@ class CombatCloseSpec extends ObjectBehavior
 	    $RollingDice->getRollsTotal(2)->willReturn(4);
 	    $FiringUnit->advanceToBaseContact($TargetUnit,4)->shouldNotBeCalled();
 	    $this->chargeSuccessfull()->shouldReturn(false);
+    }
+    
+    function it_determines_close_combat_hits(\Unit $FiringUnit, \Unit $TargetUnit,\RollingDice $RollingDice)
+    {
+	    $this->beConstructedWith($FiringUnit,null,$TargetUnit,$RollingDice);
+	    
+	    $FiringUnit->getWeaponSkill()->willReturn(4);
+	    $RollingDice->getRoll()->willReturn(5);
+	    $this->closeCombatHits()->shouldReturn(true);
+	    
+	    $RollingDice->getRoll()->willReturn(2);
+	    $this->closeCombatHits()->shouldReturn(false);
 	    
     }
     
