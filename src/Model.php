@@ -8,6 +8,12 @@ class Model
 	private $WeaponsArray = [];
 	private $coordinates = ['x'=>0,'y'=>0,'z'=>0];
 	private $hitPoints = 0;
+	private $overwatchUsedThisTurn = false;
+	
+	public function __construct(array $WeaponsArray=[])
+	{
+		$this->setWeapons($WeaponsArray);
+	}
 	
 	public function getHitPointsRemaining()
 	{
@@ -29,6 +35,33 @@ class Model
 		$distance = $this->getDistance($this,$TargetUnit);
 		
 		return($FiringWeapon->getShotsCount($distance));
+	}
+	
+	public function canOverwatchUnit($TargetUnit)
+	{
+		if($this->overwatchUsedThisTurn(true)==false)
+			return(false);
+			
+		$Weapon = $this->getPrimaryWeapon();
+		if($Weapon->canSnapFire())
+		{
+			$this->setOverwatchUsedThisTurn(true);
+			return(true);
+		}
+	}
+	
+	public function overwatchUsedThisTurn()
+	{
+		return($this->overwatchUsedThisTurn);
+	}
+	
+	public function setOverwatchUsedThisTurn($value)
+	{
+		$this->overwatchUsedThisTurn = $value;
+	}
+	public function getPrimaryWeapon()
+	{
+		return($this->WeaponsArray[0]);
 	}
 	
 	public function getDistance(Model $ModelB)
@@ -62,6 +95,23 @@ class Model
 	{
 		return(isset($WeaponsArray[$Weapon->getID()]));
 	}
+	
+	
+	public function setWeapons(array $WeaponsArray=[])
+	{
+		$PrimaryWeapon = Weapon::getPrimary($WeaponsArray);
+		foreach($WeaponsArray as $index=>$thisWeapon)
+		{
+			$this->WeaponsArray = $WeaponsArray[$index];
+			
+			if($PrimaryWeapon==$thisWeapon)
+				$this->PrimaryWeapon = &$this->WeaponsArray[$index];
+		}
+		
+		
+		
+	}
+	
 	
 	
 }

@@ -73,5 +73,23 @@ class Unit
 	}
 	
 	
+	public function getOverwatchShotCount($TargetUnit)
+	{
+		$shotCount = 0;
+		foreach($this->ModelArray as $Model)
+		{
+			if($Model->canOverwatchUnit($TargetUnit))
+				$shotCount++;
+		}
+		
+	    
+	    return($shotCount);
+	}
+	
+	public function minChargeRequired($TargetUnit)
+	{
+		
+	}
+	
 	
 }

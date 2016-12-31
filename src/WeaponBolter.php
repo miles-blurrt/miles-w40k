@@ -9,7 +9,11 @@ class WeaponBolter extends Weapon
 	private $id = "bolter";
 	private $shotsCount=2;
 	private $maxDistance = 24;
+	private $priorityRanking = 8;
 	
-	
+	public function __construct($buildParams=[])
+	{
+		
+	}
 	
 }
