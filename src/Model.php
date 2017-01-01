@@ -38,6 +38,17 @@ class Model
 		return($FiringWeapon->getShotsCount($distance));
 	}
 	
+	public function getOverwatchShotCount()
+	{
+		$shotCount = 0;
+		$Weapon = $this->getPrimaryWeapon();	
+		if($Weapon->canSnapFire())
+		{
+			$shotCount+=$Weapon->getOverwatchShotCount();
+		}
+		return($shotCount);
+	}
+	
 	public function canOverwatchUnit($TargetUnit)
 	{
 		if($this->overwatchUsedThisTurn(true)==false)

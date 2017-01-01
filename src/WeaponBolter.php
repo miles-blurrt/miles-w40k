@@ -10,6 +10,7 @@ class WeaponBolter extends Weapon
 	private $shotsCount=2;
 	private $maxDistance = 24;
 	private $priorityRanking = 8;
+	private $overwatchShotCount = 2;
 	
 	public function __construct($buildParams=[])
 	{

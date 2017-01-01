@@ -113,7 +113,9 @@ class CombatRanged extends Combat
 		foreach($this->FiringUnit->getModels() as $Model)
 		{
 			if($Model->canOverwatchUnit($TargetUnit))
-				$shotCount++;
+			{
+				$shotCount+=$Model->getOverwatchShotCount();
+			}
 		}
 
 	    return($shotCount);
@@ -141,5 +143,7 @@ class CombatRanged extends Combat
 	    
 	    return($Models);
     }
+    
+    
 	
 }

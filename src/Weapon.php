@@ -8,6 +8,12 @@ class Weapon
 	private $shotsCount = 0;
 	private $canSnapFire = false;
 	private $priorityRanking = 0;
+	private $overwatchShotCount = 1;
+	
+	public function getOverwatchShotCount()
+	{
+		return($this->overwatchShotCount);
+	}
 	
 	public function __construct($buildParams=[])
 	{
