@@ -3,6 +3,10 @@
 class Unit
 {
 	private $ModelArray = [];
+	private $DeadModelArray = [];
+	private $hasEngagedCloseCombatThisTurn = false;
+	
+	private $chargingDistance;
 	
 	public function __construct(array $ModelArray=null,$RollingDice=null)
 	{
@@ -15,8 +19,26 @@ class Unit
 		
 	}
 	
-   
+	public function setCloseCombatEngagedThisTurn()
+	{
+		$this->hasEngagedCloseCombatThisTurn = true;
+	}
+	
+	public function hasCloseCombatEngagedThisTurn()
+	{
+		return($this->hasEngagedCloseCombatThisTurn);
+	}
+	
+	public function setChargingDistance($distance)
+	{
+		$this->chargingDistance = $distance;
+	}
     
+    public function getChargingDistance()
+	{
+		return($this->chargingDistance);
+	}
+	
     public function getModels()
     {
 	    return($this->ModelArray);
@@ -41,6 +63,25 @@ class Unit
 		return($mostCommon);
     }
 	
+	public function getUnitToughnessLevel()
+	{
+		$toughnessLevelCount = [];
+	    foreach($this->getModels() as $Model)
+	    {
+		    $toughnessLevel = $Model->getToughnessLevel();
+		    if(!isset($toughnessLevelCount[$toughnessLevel]))
+		    	$toughnessLevelCount[$toughnessLevel]=1;
+		    else
+		    	$toughnessLevelCount[$toughnessLevel]++;
+		}
+		
+		arsort($toughnessLevelCount);
+		reset($toughnessLevelCount);
+		$mostCommon = key($toughnessLevelCount);
+		
+		return($mostCommon);
+	}
+	
 	public function getUnitBallisticSkill()
 	{
 		$ballisticSkillCount = [];
@@ -56,6 +97,44 @@ class Unit
 		arsort($ballisticSkillCount);
 		reset($ballisticSkillCount);
 		$mostCommon = key($ballisticSkillCount);
+		
+		return($mostCommon);
+	}
+	
+	public function getUnitStrength()
+	{
+		$strengthCount = [];
+	    foreach($this->getModels() as $Model)
+	    {
+		    $strength = $Model->getStrength();
+		    if(!isset($strengthCount[$strength]))
+		    	$strengthCount[$strength]=1;
+		    else
+		    	$strengthCount[$strength]++;
+		}
+		
+		arsort($strengthCount);
+		reset($strengthCount);
+		$mostCommon = key($strengthCount);
+		
+		return($mostCommon);
+	}
+	
+	public function getUnitArmourSave()
+	{
+		$armourSaveCount = [];
+	    foreach($this->getModels() as $Model)
+	    {
+		    $armourSave = $Model->getArmourSave();
+		    if(!isset($armourSaveCount[$armourSave]))
+		    	$armourSaveCount[$armourSave]=1;
+		    else
+		    	$armourSaveCount[$armourSave]++;
+		}
+		
+		arsort($armourSaveCount);
+		reset($armourSaveCount);
+		$mostCommon = key($armourSaveCount);
 		
 		return($mostCommon);
 	}
@@ -101,10 +180,24 @@ class Unit
 		return($minDistance);
 	}
 	
-	public function advanceToBaseContact($TargetUnit,$distance)
+	public function advanceUnitToBaseContact($TargetUnit,$distance)
 	{
-		
+		foreach($this->getModels() as $thisModel)
+		{
+			$thisModel->advanceToBaseContact($TargetUnit);
+		}
 	}
 	
+	public function getModelsAtCloseCombatInitativeStep($initativeStep)
+	{
+		$matchingModels = [];
+		foreach($this->getModels() as $thisModel)
+		{
+			if($thisModel->getCloseCombatInitativeLevel()==$initativeStep)
+				$matchingModels[]=&$thisModel;
+		}
+		
+		return($matchingModels);
+	}
 	
 }

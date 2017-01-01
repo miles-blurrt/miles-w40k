@@ -6,7 +6,7 @@ class CombatRanged extends Combat
 	private $usedBSExtraShot = false;
 	private $extraShotMode = false;
 	
-	private $result = [];
+		
 	
 	function __construct($FiringUnit, $FiringWeapon, $TargetUnit, $RollingDice=null)
     {
@@ -23,33 +23,23 @@ class CombatRanged extends Combat
 			$this->RollingDice = $RollingDice;
     }
     
-    public function resolveShootingResult()
+    public function resolveShooting()
     {
-	    $result = 
-	    [
-			'enemy_dead' => 0  
-	    ];
-	    
 	    $totalShots = $this->getWeaponShotCount();
 	    $hitResult = $this->getHitResults($totalShots);
 	    $totalWounds = $this->getWoundsCount($hitResult['hits']);
 	    $totalSaves = $this->getSavesCount($totalWounds);
-	    $kills = $totalWounds - $totalSaves;
+	    $unsavedWounds = $totalWounds - $totalSaves;
 	    
-	    if($kills<0)
-	    	$kills = 0;
-	    elseif($kills>count($TargetUnit->getModels()))
-	    	$kills = count($TargetUnit->getModels());
+	    if($unsavedWounds<0)
+	    	$unsavedWounds = 0;
 	    
-	    $result['enemy_dead'] = $kills;
-	    
-	    return($result);
-	    
+	    $this->result['enemy_wounds'] = $unsavedWounds;
 	}
 	
 	
 
-	public function getHitResults($totalShots)
+	public function getHitResults($totalAttempts)
 	{
 		$shootingResult = 
 	    [
@@ -58,7 +48,7 @@ class CombatRanged extends Combat
 		    'misses' => 0
 	    ];
 	    
-        foreach($this->RollingDice->getRolls($totalShots) as $thisRoll)
+        foreach($this->RollingDice->getRolls($totalAttempts) as $thisRoll)
         {
 	        $shootingResult[$this->getShotResult($thisRoll)]++;;
         }

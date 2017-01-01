@@ -1,11 +1,13 @@
 <?php
 
-class CombatClose
+class CombatClose extends Combat
 {
-	function __construct($FiringUnit, $FiringWeapon, $TargetUnit, $RollingDice=null)
+	private $attackingUnitChargeBonus = false;
+	public $initativeLevel = 0;
+	
+	function __construct($FiringUnit, $TargetUnit, $RollingDice=null)
     {
 	    $this->FiringUnit = $FiringUnit;
-		$this->FiringWeapon = $FiringWeapon;
 		$this->TargetUnit = $TargetUnit;
 	    	
 	    if($RollingDice==null)
@@ -14,31 +16,130 @@ class CombatClose
 			$this->RollingDice = $RollingDice;
     }
     
-    function chargeSuccessfull()
+
+    public function resolveFightSubphase()
     {
-	    $distanceRequired = $this->FiringUnit->minDistance($this->TargetUnit);
-	    $chargeDistance = $this->RollingDice->getRollsTotal(2);
-	    if($chargeDistance>=$distanceRequired)
-	    {
-		    $this->FiringUnit->advanceToBaseContact($this->TargetUnit,$chargeDistance);
-		    return(true);
-	    }
-	    else
-	    	return(false);
+	    $this->initativeLevel = 10;
+	    do
+		{
+			$AttackingUnitWoundsCaused = $this->getCloseCombatUnsavedWounds($this->FiringUnit,$this->TargetUnit,$this->attackingUnitChargeBonus);
+			if(!$this->TargetUnit->hasCloseCombatEngagedThisTurn())
+				$TargetUnitWoundsCaused = $this->getCloseCombatUnsavedWounds($this->FiringUnit,$this->TargetUnit);
+			
+			$this->initativeLevel--;
+			
+			// TODO: Resolve Result
+			$this->result['enemy_wounds']+=$AttackingUnitWoundsCaused;
+			$this->result['friendly_wounds']+=$TargetUnitWoundsCaused;
+			
+			$this->FiringUnit->applyWounds($AttackingUnitWoundsCaused);	
+			$this->TargetUnit->applyWounds($TargetUnitWoundsCaused);
+				
+		}
+		while ($this->initativeLevel>=1);
     }
     
-    public function closeCombatHits()
-	{
-		$roll = $this->RollingDice->getRoll();
+    public function resolveNewCloseCombat()
+    {
+	    $this->resolveOverwatch();
+	    $this->FiringUnit->applyWounds($this->result['friendly_wounds']);
+	    if(!$this->FiringUnit->chargeSuccessfull)
+	    	return;
+	    	
+	    $this->FiringUnit->advanceUnitToBaseContact();
+	    
+	    $this->attackingUnitChargeBonus = true;
+	    
+		$this->resolveFightSubphase();
+		$this->attackingUnitChargeBonus = false;
 		
-		if($roll==1)
+    }
+
+    /// Function below can be easily unit tested
+
+    public function getCloseCombatUnsavedWounds($ThisUnit,$TargetUnit,$chargeBonus=false)
+    {
+	    $totalAttacks = 0;
+	    
+	    $FightingModels = $ThisUnit->getModelsAtCloseCombatInitativeStep($this->initativeLevel);
+	    
+	    $unitWeaponSkill = $ThisUnit->getUnitWeaponSkill();
+	    $targetUnitWeaponSkill = $TargetUnit->getUnitWeaponSkill();
+	    $chargeBonusAttacks = 0;
+	    
+	    foreach($FightingModels as $thisModel)
+	    {
+		    if($chargeBonus)
+		    	$chargeBonusAttacks++;
+		    $totalAttacks += $thisModel->getCloseCombatAttackCount();
+	    }
+	    
+	    $totalAttacks += $chargeBonusAttacks;
+	    $hits = 0;
+	    foreach($this->RollingDice->getRolls($totalAttacks) as $thisRoll)
+	    {
+		    if($this->closeCombatHits($unitWeaponSkill,$targetUnitWeaponSkill,$thisRoll))
+		    	$hits++;
+	    }
+	    
+	    $wounds = 0;
+	    foreach($this->RollingDice->getRolls($hits) as $thisRoll)
+	    {
+		    if($this->causesWound($ThisUnit->getUnitStrength(),$TargetUnit->getUnitToughnessLevel(),$thisRoll))
+		    	$wounds++;
+	    }
+	    
+	    
+	    $unsavedWounds = 0;
+	    foreach($this->RollingDice->getRolls($wounds) as $thisRoll)
+	    {
+		    if(!($this->savesCloseCombatWound($TargetUnit->getUnitArmourSave(),$thisRoll)))
+		    	$unsavedWounds++;
+	    }
+		
+		return($unsavedWounds);
+	    
+    }
+    
+    public function savesCloseCombatWound($ArmourSave,$roll)
+    {
+	    if($roll==1)
 			return(false);
 		
-		$minRollRequired = 7 - $this->FiringUnit->getUnitWeaponSkill();
+		$minRollRequired = $ArmourSave;
 		
 		if($minRollRequired<2)
 			$minRollRequired = 2;
+		if($minRollRequired > 6)
+			$minRollRequired = 6;
 					
 		return($roll>=$minRollRequired);
+    }
+    
+    public function closeCombatHits($weaponSkill, $targetWeaponSkill, $thisRoll)
+	{
+		if($thisRoll==1)
+			return(false);
+		
+		$minRollRequired = 4 - ($weaponSkill - $targetWeaponSkill);
+		
+		if($minRollRequired<2)
+			$minRollRequired = 2;
+		if($minRollRequired > 6)
+			$minRollRequired = 6;
+					
+		return($thisRoll>=$minRollRequired);
 	}
+	
+	 function chargeSuccessfull()
+    {
+	    $distanceRequired = $this->FiringUnit->minDistance($this->TargetUnit);
+	    
+	    $chargingDistance = $this->RollingDice->getRollsTotal(2);
+	    	
+	    if($chargingDistance>=$distanceRequired)
+	        return(true);
+	    else
+	    	return(false);
+    }
 }

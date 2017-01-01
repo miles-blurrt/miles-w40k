@@ -9,6 +9,7 @@ class Weapon
 	private $canSnapFire = false;
 	private $priorityRanking = 0;
 	private $overwatchShotCount = 1;
+
 	
 	public function getOverwatchShotCount()
 	{
@@ -60,6 +61,10 @@ class Weapon
 		return($this->ap);
 	}
 	
+	public function getInitativeOverride()
+	{
+		return(false);	
+	}
 	
 	public static function getPrimary($WeaponsArray)
 	{

@@ -10,10 +10,30 @@ class Model
 	private $coordinates = ['x'=>0,'y'=>0,'z'=>0];
 	private $hitPoints = 0;
 	private $overwatchUsedThisTurn = false;
+	private $initativeLevel = 10;
+	private $toughnessLevel = 0;
+	private $closeCombatAttackCount = 0;
+	private $strength = 0;
+	private $armourSave = 0;
 	
-	public function __construct(array $WeaponsArray=[])
+	private $inBaseContact = false;
+	
+	public function __construct($params = [], array $WeaponsArray=[])
 	{
 		$this->setWeapons($WeaponsArray);
+		foreach($params as $thisParam=>$value)
+			$this->{$thisParam} = $value;
+	}
+	
+	public function advanceToBaseContact(Unit $TargetUnit)
+	{
+		// @TODO: Do properly
+		$this->inBaseContact = true;
+	}
+	
+	public function inBaseContact()
+	{
+		return($this->inBaseContact);
 	}
 	
 	public function getHitPointsRemaining()
@@ -26,6 +46,15 @@ class Model
 		return($this->coordinates);
 	}
 	
+	public function getCloseCombatInitativeLevel()
+	{
+		$Weapon = $this->getCloseCombatPrimaryWeapon();
+		if($Weapon->getCloseCombatInitativeOverride())
+			$this->initativeLevel = $Weapon->getCloseCombatInitativeOverride();
+			
+		return($this->initativeLevel);
+	}
+	
 	public function setCoordinates($coordinates)
 	{
 		$this->coordinates = $coordinates;
@@ -36,6 +65,11 @@ class Model
 		$distance = $this->getDistance($this,$TargetUnit);
 		
 		return($FiringWeapon->getShotsCount($distance));
+	}
+	
+	public function getCloseCombatAttackCount()
+	{
+		return($this->closeCombatAttackCount);
 	}
 	
 	public function getOverwatchShotCount()
@@ -73,7 +107,14 @@ class Model
 	}
 	public function getPrimaryWeapon()
 	{
+		// @TODO: Fix
 		return($this->WeaponsArray[0]);
+	}
+	
+	public function getCloseCombatPrimaryWeapon()
+	{
+		// @TODO: Fix
+		return($this->WeaponsArray[1]);
 	}
 	
 	public function getDistance(Model $ModelB)
@@ -101,6 +142,21 @@ class Model
 	public function getWeaponSkill()
 	{
 		return($this->weaponSkill);
+	}
+	
+	public function getStrength()
+	{
+		return($this->strength);
+	}
+	
+	public function getToughnessLevel()
+	{
+		return($this->toughnessLevel);
+	}
+	
+	public function getArmourSave()
+	{
+		return($this->armourSave);
 	}
 	
 	public function getLeadership()

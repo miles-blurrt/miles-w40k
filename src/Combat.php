@@ -6,7 +6,12 @@ class Combat
 	private $usedBSExtraShot = false;
 	private $extraShotMode = false;
 	
-	private $result = [];
+	private $result = 
+	[
+		'friendly_wounds' => 0,
+		'enemy_dead' => 0
+	];
+
 	
 	function __construct($FiringUnit, $FiringWeapon, $TargetUnit, $RollingDice=null)
     {
@@ -25,25 +30,16 @@ class Combat
     
     public function resolveOverwatch()
 	{
-		$result = 
-	    [
-			'firingunit_dead' => 0  
-	    ];
-	    
-	    $totalShots = $this->TargetUnit->getOverwatchShotCount($this->FiringUnit);
+		$totalShots = $this->TargetUnit->getOverwatchShotCount($this->FiringUnit);
 	    $hitResult = $this->getHitResults($totalShots);
 	    $totalWounds = $this->getWoundsCount($hitResult['hits']);
 	    $totalSaves = $this->getSavesCount($totalWounds);
-	    $kills = $totalWounds - $totalSaves;
+	    $unsavedWounds = $totalWounds - $totalSaves;
 	    
-	    if($kills<0)
-	    	$kills = 0;
-	    elseif($kills>count($TargetUnit->getModels()))
-	    	$kills = count($TargetUnit->getModels());
+	    if($unsavedWounds<0)
+	    	$unsavedWounds = 0;    
 	    
-	    $result['enemy_dead'] = $kills;
-	    
-	    return($result);
+	    $this->result['friendly_wounds'] = $unsavedWounds;
 	}
 	
     public function causesWound($weaponStrength,$targetToughness,$roll)
@@ -73,21 +69,21 @@ class Combat
 		return($roll>=$minRollRequired);
 	}
 	
-	public function savesWound($weaponStrength,$targetSave,$roll)
+	public function savesWound($strength,$targetSave,$roll)
 	{
 		$minRollRequired = 0;
 		
-		if($weaponStrength==$targetSave)
+		if($strength==$targetSave)
 			$minRollRequired = 4;
 		else
 		{
-			if($weaponStrength<$targetSave)
+			if($strength<$targetSave)
 			{
-				$minRollRequired = 4+($targetSave-$weaponStrength);
+				$minRollRequired = 4+($targetSave-$strength);
 			}
 			else
 			{
-				$minRollRequired = 4-($weaponStrength - $targetSave);
+				$minRollRequired = 4-($strength - $targetSave);
 			}
 		}
 		
