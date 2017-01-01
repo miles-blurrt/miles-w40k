@@ -1,6 +1,6 @@
 <?php
 
-trait WeaponUnwieldly
+trait WeaponUnwieldy
 {
 	public function getInitativeOverride()
 	{

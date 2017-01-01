@@ -17,4 +17,12 @@ class ModelSpec extends ObjectBehavior
 	    
 	    $this->getDistance($TargetModel)->shouldReturn(2.0);
     }
+    
+    function it_picks_a_close_combat_weapon_and_sets_initiative_level_override(\WeaponBolter $WeaponBolter, \WeaponPowerfist $WeaponPowerfist)
+    {
+		$WeaponBolter = new \WeaponBolter;
+		$WeaponPowerfist = new \WeaponPowerfist;
+	    $this->beConstructedWith([],[$WeaponBolter,$WeaponPowerfist]);
+	    $this->getCloseCombatinitiativeLevel()->shouldEqual(1);
+    }
 }

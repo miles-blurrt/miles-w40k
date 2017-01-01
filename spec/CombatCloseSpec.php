@@ -53,15 +53,17 @@ class CombatCloseSpec extends ObjectBehavior
     function it_determines_close_combat_unsaved_wounds(\Unit $FiringUnit, \Unit $TargetUnit,\RollingDice $RollingDice, \Model $ModelA, \Model $ModelB)
     {
 	    $this->beConstructedWith($FiringUnit,$TargetUnit,$RollingDice);
-	    $this->initativeLevel=4;
+	    $this->initiativeLevel=4;
 	    $FiringUnit->getUnitWeaponSkill()->willReturn(4);
 	    $FiringUnit->getUnitStrength()->willReturn(4);
 	    $TargetUnit->getUnitWeaponSkill()->willReturn(4);
 	    
 	    $ModelA->getCloseCombatAttackCount()->willReturn(1);
 	    $ModelB->getCloseCombatAttackCount()->willReturn(6);
-	    
-	    $FiringUnit->getModelsAtCloseCombatInitativeStep(4)->willReturn([$ModelA,$ModelB]);
+	    $ModelA->pileIn($TargetUnit)->shouldBeCalled();
+	    $ModelB->pileIn($TargetUnit)->shouldBeCalled();
+
+	    $FiringUnit->getModelsAtCloseCombatinitiativeStep(4)->willReturn([$ModelA,$ModelB]);
 	    // To hit
 	    $RollingDice->getRolls(9)->willReturn([4,6,2,4,1,4,4,6,1]);
 	    // To wound

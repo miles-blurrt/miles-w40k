@@ -10,7 +10,7 @@ class Model
 	private $coordinates = ['x'=>0,'y'=>0,'z'=>0];
 	private $hitPoints = 0;
 	private $overwatchUsedThisTurn = false;
-	private $initativeLevel = 10;
+	private $initiativeLevel = 10;
 	private $toughnessLevel = 0;
 	private $closeCombatAttackCount = 0;
 	private $strength = 0;
@@ -46,13 +46,13 @@ class Model
 		return($this->coordinates);
 	}
 	
-	public function getCloseCombatInitativeLevel()
+	public function getCloseCombatinitiativeLevel()
 	{
-		$Weapon = $this->getCloseCombatPrimaryWeapon();
-		if($Weapon->getCloseCombatInitativeOverride())
-			$this->initativeLevel = $Weapon->getCloseCombatInitativeOverride();
+		$Weapon = \Weapon::getCloseCombatWeapon($this->WeaponsArray);
+		if($Weapon->getInitativeOverride())
+			$this->initiativeLevel = $Weapon->getInitativeOverride();
 			
-		return($this->initativeLevel);
+		return($this->initiativeLevel);
 	}
 	
 	public function setCoordinates($coordinates)
@@ -111,11 +111,7 @@ class Model
 		return($this->WeaponsArray[0]);
 	}
 	
-	public function getCloseCombatPrimaryWeapon()
-	{
-		// @TODO: Fix
-		return($this->WeaponsArray[1]);
-	}
+	
 	
 	public function getDistance(Model $ModelB)
 	{
@@ -175,13 +171,18 @@ class Model
 		$PrimaryWeapon = Weapon::getPrimary($WeaponsArray);
 		foreach($WeaponsArray as $index=>$thisWeapon)
 		{
-			$this->WeaponsArray = $WeaponsArray[$index];
+			$this->WeaponsArray[$index] = $WeaponsArray[$index];
 			
 			if($PrimaryWeapon==$thisWeapon)
 				$this->PrimaryWeapon = &$this->WeaponsArray[$index];
 		}
 		
 		
+		
+	}
+	
+	public function pileIn($TargetUnit)
+	{
 		
 	}
 	

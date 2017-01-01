@@ -188,12 +188,12 @@ class Unit
 		}
 	}
 	
-	public function getModelsAtCloseCombatInitativeStep($initativeStep)
+	public function getModelsAtCloseCombatinitiativeStep($initiativeStep)
 	{
 		$matchingModels = [];
 		foreach($this->getModels() as $thisModel)
 		{
-			if($thisModel->getCloseCombatInitativeLevel()==$initativeStep)
+			if($thisModel->getCloseCombatinitiativeLevel()==$initiativeStep)
 				$matchingModels[]=&$thisModel;
 		}
 		

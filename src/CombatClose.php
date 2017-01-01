@@ -3,7 +3,7 @@
 class CombatClose extends Combat
 {
 	private $attackingUnitChargeBonus = false;
-	public $initativeLevel = 0;
+	public $initiativeLevel = 0;
 	
 	function __construct($FiringUnit, $TargetUnit, $RollingDice=null)
     {
@@ -19,14 +19,14 @@ class CombatClose extends Combat
 
     public function resolveFightSubphase()
     {
-	    $this->initativeLevel = 10;
+	    $this->initiativeLevel = 10;
 	    do
 		{
 			$AttackingUnitWoundsCaused = $this->getCloseCombatUnsavedWounds($this->FiringUnit,$this->TargetUnit,$this->attackingUnitChargeBonus);
 			if(!$this->TargetUnit->hasCloseCombatEngagedThisTurn())
 				$TargetUnitWoundsCaused = $this->getCloseCombatUnsavedWounds($this->FiringUnit,$this->TargetUnit);
 			
-			$this->initativeLevel--;
+			$this->initiativeLevel--;
 			
 			// TODO: Resolve Result
 			$this->result['enemy_wounds']+=$AttackingUnitWoundsCaused;
@@ -36,7 +36,7 @@ class CombatClose extends Combat
 			$this->TargetUnit->applyWounds($TargetUnitWoundsCaused);
 				
 		}
-		while ($this->initativeLevel>=1);
+		while ($this->initiativeLevel>=1);
     }
     
     public function resolveNewCloseCombat()
@@ -61,7 +61,7 @@ class CombatClose extends Combat
     {
 	    $totalAttacks = 0;
 	    
-	    $FightingModels = $ThisUnit->getModelsAtCloseCombatInitativeStep($this->initativeLevel);
+	    $FightingModels = $ThisUnit->getModelsAtCloseCombatinitiativeStep($this->initiativeLevel);
 	    
 	    $unitWeaponSkill = $ThisUnit->getUnitWeaponSkill();
 	    $targetUnitWeaponSkill = $TargetUnit->getUnitWeaponSkill();
@@ -69,6 +69,7 @@ class CombatClose extends Combat
 	    
 	    foreach($FightingModels as $thisModel)
 	    {
+		    $thisModel->pileIn($TargetUnit);
 		    if($chargeBonus)
 		    	$chargeBonusAttacks++;
 		    $totalAttacks += $thisModel->getCloseCombatAttackCount();

@@ -9,7 +9,7 @@ class Weapon
 	private $canSnapFire = false;
 	private $priorityRanking = 0;
 	private $overwatchShotCount = 1;
-
+	var $closeCombat = false;
 	
 	public function getOverwatchShotCount()
 	{
@@ -24,6 +24,10 @@ class Weapon
 		}
 	}
 	
+	public function isCloseCombat()
+	{
+		return($this->closeCombat);
+	}
 	public function getStrength()
 	{
 		return($this->strength);
@@ -81,5 +85,17 @@ class Weapon
 		}
 		
 		return($PriorityWeapon);
+	}
+	
+	static function getCloseCombatWeapon($WeaponsArray)
+	{
+		foreach($WeaponsArray as $thisWeapon)
+		{
+			if($thisWeapon->isCloseCombat())
+			{
+				return($thisWeapon);
+			}
+		}
+		
 	}
 }
