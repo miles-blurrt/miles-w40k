@@ -9,7 +9,9 @@ class Weapon
 	private $canSnapFire = false;
 	private $priorityRanking = 0;
 	private $overwatchShotCount = 1;
+	private $ap = 0;
 	var $closeCombat = false;
+	
 	
 	public function getOverwatchShotCount()
 	{

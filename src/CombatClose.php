@@ -63,25 +63,33 @@ class CombatClose extends Combat
 	    
 	    $FightingModels = $ThisUnit->getModelsAtCloseCombatinitiativeStep($this->initiativeLevel);
 	    
-	    $unitWeaponSkill = $ThisUnit->getUnitWeaponSkill();
+	    
 	    $targetUnitWeaponSkill = $TargetUnit->getUnitWeaponSkill();
 	    $chargeBonusAttacks = 0;
-	    
+	    $hits = 0;
 	    foreach($FightingModels as $thisModel)
 	    {
-		    $thisModel->pileIn($TargetUnit);
+		    $modelWeaponSkill = $thisModel->getWeaponSkill();
+		    $this->modelPileIn($thisModel,$TargetUnit);
+		    
+		    $attacks = $thisModel->getCloseCombatAttackCount();
 		    if($chargeBonus)
-		    	$chargeBonusAttacks++;
-		    $totalAttacks += $thisModel->getCloseCombatAttackCount();
+		    	$attacks+=1;
+		    	
+		    if($this->modelInCloseCombatRange($thisModel,$TargetUnit))
+		    {
+			    $rolls = $this->RollingDice->getRolls($attacks);
+			    foreach($rolls as $thisRoll)
+			    {
+				    if($this->closeCombatHits($modelWeaponSkill,$targetUnitWeaponSkill,$thisRoll))
+				    	$hits++;
+				    	
+			    }
+		    }
+		    
 	    }
+	   
 	    
-	    $totalAttacks += $chargeBonusAttacks;
-	    $hits = 0;
-	    foreach($this->RollingDice->getRolls($totalAttacks) as $thisRoll)
-	    {
-		    if($this->closeCombatHits($unitWeaponSkill,$targetUnitWeaponSkill,$thisRoll))
-		    	$hits++;
-	    }
 	    
 	    $wounds = 0;
 	    foreach($this->RollingDice->getRolls($hits) as $thisRoll)
@@ -100,6 +108,12 @@ class CombatClose extends Combat
 		
 		return($unsavedWounds);
 	    
+    }
+    
+    public function modelInCloseCombatRange($thisModel,$TargetUnit)
+    {
+	    // @TODO: Fix so returns if in base contact or 2 distance within a model that is
+	    return true;
     }
     
     public function savesCloseCombatWound($ArmourSave,$roll)
@@ -143,4 +157,9 @@ class CombatClose extends Combat
 	    else
 	    	return(false);
     }
+    
+    public function modelPileIn($ThisModel,$TargetUnit)
+	{
+		// @TODO: Pile in 3 inches
+	}
 }

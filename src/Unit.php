@@ -44,6 +44,7 @@ class Unit
 	    return($this->ModelArray);
     }
     
+   
     public function getUnitWeaponSkill()
     {
 	    $weaponSkillCount = [];

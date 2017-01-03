@@ -15,6 +15,8 @@ class Model
 	private $closeCombatAttackCount = 0;
 	private $strength = 0;
 	private $armourSave = 0;
+	private $baseSize = 0;
+	private $baseType = '';
 	
 	private $inBaseContact = false;
 	
@@ -25,6 +27,10 @@ class Model
 			$this->{$thisParam} = $value;
 	}
 	
+	public function getBaseSize()
+	{
+		return($this->baseSize);
+	}
 	public function advanceToBaseContact(Unit $TargetUnit)
 	{
 		// @TODO: Do properly
@@ -181,10 +187,7 @@ class Model
 		
 	}
 	
-	public function pileIn($TargetUnit)
-	{
-		
-	}
+	
 	
 	
 	
