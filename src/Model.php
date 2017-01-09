@@ -78,6 +78,12 @@ class Model
 		return($this->closeCombatAttackCount);
 	}
 	
+	public function getCloseCombatWeaponAP()
+	{
+		$Weapon = \Weapon::getCloseCombatWeapon($this->WeaponsArray);
+		return($Weapon->getAP());
+	}
+	
 	public function getOverwatchShotCount()
 	{
 		$shotCount = 0;

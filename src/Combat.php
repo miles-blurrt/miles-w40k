@@ -69,7 +69,7 @@ class Combat
 		return($roll>=$minRollRequired);
 	}
 	
-	public function savesWound($strength,$targetSave,$roll)
+	public function savesWound($strength,$ap,$targetSave,$roll)
 	{
 		$minRollRequired = 0;
 		
@@ -116,13 +116,17 @@ class Combat
 	
 	public function getSavesCount($woundsCount)
 	{
+		if($this->FiringWeapon->getAP()<=$this->TargetModel->getArmourSave())
+			return(0);
+			
 		$rolls = $this->RollingDice->getRolls($woundsCount);
 		
 		$saves = 0;
         
         foreach($rolls as $thisRoll)
         {
-	        $saveResult = $this->savesWound($this->FiringWeapon->getStrength(),$this->TargetModel->getArmourSave(),$thisRoll);
+	        
+	        $saveResult = $this->savesWound($this->FiringWeapon->getStrength(),$this->FiringWeapon->getAP(),$this->TargetModel->getArmourSave(),$thisRoll);
 	        if($saveResult == 'save')
 	        	$saves++;
         }

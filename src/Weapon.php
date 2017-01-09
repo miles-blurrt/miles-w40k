@@ -35,6 +35,7 @@ class Weapon
 		return($this->strength);
 	}
 	
+	
 	public function getPriority()
 	{
 		return($this->priorityRanking);
@@ -72,7 +73,7 @@ class Weapon
 		return(false);	
 	}
 	
-	public static function getPrimary($WeaponsArray)
+	static function getPrimary($WeaponsArray)
 	{
 		$highestPriority = 0;
 		$PriorityWeapon = null;

@@ -63,48 +63,52 @@ class CombatClose extends Combat
 	    
 	    $FightingModels = $ThisUnit->getModelsAtCloseCombatinitiativeStep($this->initiativeLevel);
 	    
-	    
 	    $targetUnitWeaponSkill = $TargetUnit->getUnitWeaponSkill();
 	    $chargeBonusAttacks = 0;
-	    $hits = 0;
+	    $unsavedWounds = 0;
+	    
 	    foreach($FightingModels as $thisModel)
 	    {
-		    $modelWeaponSkill = $thisModel->getWeaponSkill();
 		    $this->modelPileIn($thisModel,$TargetUnit);
+		    if (!$this->modelInCloseCombatRange($thisModel,$TargetUnit))
+		    	continue;
+		    
+		    $hits = 0;
+		    
+		    $modelWeaponSkill = $thisModel->getWeaponSkill();
+		    
 		    
 		    $attacks = $thisModel->getCloseCombatAttackCount();
 		    if($chargeBonus)
 		    	$attacks+=1;
-		    	
-		    if($this->modelInCloseCombatRange($thisModel,$TargetUnit))
+		    
+		    $rolls = $this->RollingDice->getRolls($attacks);
+		    foreach($rolls as $thisRoll)
 		    {
-			    $rolls = $this->RollingDice->getRolls($attacks);
-			    foreach($rolls as $thisRoll)
-			    {
-				    if($this->closeCombatHits($modelWeaponSkill,$targetUnitWeaponSkill,$thisRoll))
-				    	$hits++;
-				    	
-			    }
+			    if($this->closeCombatHits($modelWeaponSkill,$targetUnitWeaponSkill,$thisRoll))
+			    	$hits++;
+			    	
+		    }
+		    
+		     $wounds = 0;
+		    foreach($this->RollingDice->getRolls($hits) as $thisRoll)
+		    {
+			    if($this->causesWound($ThisUnit->getUnitStrength(),$TargetUnit->getUnitToughnessLevel(),$thisRoll))
+			    	$wounds++;
+		    }
+		    
+		    
+		    foreach($this->RollingDice->getRolls($wounds) as $thisRoll)
+		    {
+			    if(!($this->savesCloseCombatWound($TargetUnit->getUnitArmourSave(),$thisModel->getCloseCombatWeaponAP(),$thisRoll)))
+			    	$unsavedWounds++;
 		    }
 		    
 	    }
 	   
 	    
 	    
-	    $wounds = 0;
-	    foreach($this->RollingDice->getRolls($hits) as $thisRoll)
-	    {
-		    if($this->causesWound($ThisUnit->getUnitStrength(),$TargetUnit->getUnitToughnessLevel(),$thisRoll))
-		    	$wounds++;
-	    }
-	    
-	    
-	    $unsavedWounds = 0;
-	    foreach($this->RollingDice->getRolls($wounds) as $thisRoll)
-	    {
-		    if(!($this->savesCloseCombatWound($TargetUnit->getUnitArmourSave(),$thisRoll)))
-		    	$unsavedWounds++;
-	    }
+	   
 		
 		return($unsavedWounds);
 	    
@@ -116,8 +120,11 @@ class CombatClose extends Combat
 	    return true;
     }
     
-    public function savesCloseCombatWound($ArmourSave,$roll)
+    public function savesCloseCombatWound($ArmourSave,$weaponAP,$roll)
     {
+	    if($weaponAP<=$ArmourSave)
+	    	return(false);
+	    	
 	    if($roll==1)
 			return(false);
 		
