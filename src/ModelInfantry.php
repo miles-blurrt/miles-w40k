@@ -8,6 +8,16 @@ class ModelInfantry extends Model
 	private $ballisticSkill = 0;
 	private $movementDistance = 6;
 	
+	public function getMovementFireOptions()
+	{
+		$state = $this->getCurrentMovementState();
+		
+		if($state=='none')
+			return(['all' => 'full_bs']);
+			
+		if($state=='normal')
+			return(['all' => 'full_bs']);
+	}
 	
 	public function getToughness()
 	{

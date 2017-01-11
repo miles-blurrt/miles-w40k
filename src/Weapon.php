@@ -10,7 +10,8 @@ class Weapon
 	private $priorityRanking = 0;
 	private $overwatchShotCount = 1;
 	private $ap = 0;
-	var $closeCombat = false;
+	
+	private $defaultCloseCombat = false;
 	
 	
 	public function getOverwatchShotCount()
@@ -28,8 +29,17 @@ class Weapon
 	
 	public function isCloseCombat()
 	{
-		return($this->closeCombat);
+		if(isset($this->closeCombat))
+			return($this->closeCombat);
+		else
+			return($this->defaultCloseCombat);
 	}
+	
+	public function canSnapFire()
+	{
+		return($this->canSnapFire);
+	}
+	
 	public function getStrength()
 	{
 		return($this->strength);
@@ -53,10 +63,6 @@ class Weapon
 			return($this->shotsCount);
 	}
 	
-	public function canSnapFire()
-	{
-		return($this->canSnapFire);
-	}
 	
 	public function getID()
 	{
@@ -71,6 +77,17 @@ class Weapon
 	public function getInitativeOverride()
 	{
 		return(false);	
+	}
+	
+	public function getMovementFireOptionsOverride($movementState)
+	{
+		return('full_bs');
+	}
+	
+	public function getFireAssaultOptionsOverride($fireState)
+	{
+		if($fireState=='fired')
+			return(false);
 	}
 	
 	static function getPrimary($WeaponsArray)

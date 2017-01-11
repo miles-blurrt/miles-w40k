@@ -2,7 +2,7 @@
 
 class WeaponBolter extends Weapon
 {
-	use WeaponRapidFire;
+	use WeaponTraitRapidfire;
 	
 	private $strength = 4;
 	private $ap = 5;
@@ -12,9 +12,5 @@ class WeaponBolter extends Weapon
 	private $priorityRanking = 8;
 	private $overwatchShotCount = 2;
 	
-	public function __construct($buildParams=[])
-	{
-		
-	}
 	
 }

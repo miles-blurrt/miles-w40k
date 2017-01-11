@@ -2,10 +2,9 @@
 
 class WeaponPowerclaw extends Weapon
 {
-	use WeaponUnwieldy;
+	use WeaponTraitUnwieldy;
 	
 	private $strength = 4;
-	var $closeCombat = true;
 	private $id = "powerclaw";
 	private $ap = 2;
 	

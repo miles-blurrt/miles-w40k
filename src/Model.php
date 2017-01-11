@@ -17,7 +17,8 @@ class Model
 	private $armourSave = 0;
 	private $baseSize = 0;
 	private $baseType = '';
-	private $movementDistance = 0;
+	private $movementDistance = 0;		
+	private $currentMovementState = 'none';
 	
 	private $inBaseContact = false;
 	
@@ -26,6 +27,11 @@ class Model
 		$this->setWeapons($WeaponsArray);
 		foreach($params as $thisParam=>$value)
 			$this->{$thisParam} = $value;
+	}
+	
+	public function getCurrentMovementState()
+	{
+		return($this->currentMovementState);
 	}
 	
 	public function getToughness()
