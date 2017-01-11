@@ -6,7 +6,7 @@ class ModelInfantry extends Model
 	private $toughness = 0;
 	private $armourSave = 0;
 	private $ballisticSkill = 0;
-	
+	private $movementDistance = 6;
 	
 	
 	public function getToughness()

@@ -17,6 +17,7 @@ class Model
 	private $armourSave = 0;
 	private $baseSize = 0;
 	private $baseType = '';
+	private $movementDistance = 0;
 	
 	private $inBaseContact = false;
 	
@@ -27,9 +28,23 @@ class Model
 			$this->{$thisParam} = $value;
 	}
 	
+	public function getToughness()
+	{
+		return($this->toughness);
+	}
+	
+	public function getArmourSave()
+	{
+		return($this->armourSave);
+	}
+	
 	public function getBaseSize()
 	{
 		return($this->baseSize);
+	}
+	public function getMovementDistance()
+	{
+		return($this->movementDistance);
 	}
 	public function advanceToBaseContact(Unit $TargetUnit)
 	{
@@ -162,10 +177,7 @@ class Model
 		return($this->toughnessLevel);
 	}
 	
-	public function getArmourSave()
-	{
-		return($this->armourSave);
-	}
+	
 	
 	public function getLeadership()
 	{
@@ -192,6 +204,21 @@ class Model
 		
 		
 	}
+	public function resolveCombatShot(CombatShot $CombatShot)
+    {
+	    if($this->shotHits($CombatShot->getRoll()))
+			$CombatShot->addHit();
+	    	    
+	    return($CombatShot);
+    }
+    
+    public function resolveCombatHit(CombatHit $CombatHit)
+    {
+	    if($this->causesWound($CombatHit->getWeaponStrength(),$CombatHit->getRoll()))
+			$CombatHit->addWound();
+	    	    
+	    return($CombatHit);
+    }
 	
 	
 	

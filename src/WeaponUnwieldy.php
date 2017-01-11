@@ -4,6 +4,6 @@ trait WeaponUnwieldy
 {
 	public function getInitativeOverride()
 	{
-		return(1);	
+		return(10);	
 	}
 }
