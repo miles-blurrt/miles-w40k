@@ -19,6 +19,10 @@ class Unit
 		
 	}
 	
+	public function isVehicleUnit()
+	{
+		return($this->ModelArray[0]->isVehicle());
+	}
 	public function setCloseCombatEngagedThisTurn()
 	{
 		$this->hasEngagedCloseCombatThisTurn = true;

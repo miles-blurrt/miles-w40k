@@ -2,7 +2,7 @@
 
 class Phase
 {
-    public function __construct($argument1)
+    public function __construct()
     {
         // TODO: write logic here
     }

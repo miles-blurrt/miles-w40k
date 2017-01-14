@@ -19,6 +19,7 @@ class Model
 	private $baseType = '';
 	private $movementDistance = 0;		
 	private $currentMovementState = 'none';
+	private $isVehicle = false;
 	
 	private $inBaseContact = false;
 	
@@ -27,6 +28,11 @@ class Model
 		$this->setWeapons($WeaponsArray);
 		foreach($params as $thisParam=>$value)
 			$this->{$thisParam} = $value;
+	}
+	
+	public function isVehicle()
+	{
+		return($this->isVehicle);
 	}
 	
 	public function getCurrentMovementState()

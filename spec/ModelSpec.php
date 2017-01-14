@@ -23,6 +23,6 @@ class ModelSpec extends ObjectBehavior
 		$WeaponBolter = new \WeaponBolter;
 		$WeaponPowerfist = new \WeaponPowerfist;
 	    $this->beConstructedWith(['initiativeLevel'=>3],[$WeaponBolter,$WeaponPowerfist]);
-	    $this->getCloseCombatinitiativeLevel()->shouldEqual(10);
+	    $this->getCloseCombatinitiativeLevel()->shouldEqual(1);
     }
 }

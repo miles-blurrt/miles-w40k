@@ -1,6 +1,6 @@
 <?php
 
-class ModelTank extends Model
+class ModelTank extends ModelVehicle;
 {
 	private $isRetreating = false;
 	private $toughness = 0;
@@ -8,6 +8,7 @@ class ModelTank extends Model
 	private $ballisticSkill = 0;
 	private $movementDistance = 6;
 	private $fastSpeed = 12;
+	private $extraFast = 18;
 
 
 	public function getMovementFireOptions()
@@ -22,6 +23,9 @@ class ModelTank extends Model
 			
 		if($state=='fast')
 			return(['all' => 'snapfire']);
+			
+		if($state=='extraFast')
+			return(['all' => 'none']);
 	}
 	
 	
