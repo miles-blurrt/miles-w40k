@@ -5,7 +5,7 @@ class Unit
 	private $ModelArray = [];
 	private $DeadModelArray = [];
 	private $hasEngagedCloseCombatThisTurn = false;
-	
+	private $id;
 	private $chargingDistance;
 	
 	public function __construct(array $ModelArray=null,$RollingDice=null)
@@ -17,12 +17,19 @@ class Unit
 		else
 			$this->RollingDice = $RollingDice;
 		
+		$this->id = spl_object_hash($this);
 	}
 	
 	public function isVehicleUnit()
 	{
 		return($this->ModelArray[0]->isVehicle());
 	}
+	
+	public function getId()
+	{
+		return($this->id);
+	}
+	
 	public function setCloseCombatEngagedThisTurn()
 	{
 		$this->hasEngagedCloseCombatThisTurn = true;
