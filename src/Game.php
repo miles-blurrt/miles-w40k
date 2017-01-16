@@ -8,12 +8,14 @@ class Game
 	var $turnNumber = 0;
 	var $Rules = null;
 	
-	function __construct($Armies = [], $Rules = null)
+	function __construct($Armies = [], $Map = null, $Rules = null)
 	{
 		$this->turnNumber = 1;
 		$this->Armies = $Armies;
 		$this->Turn = new Turn($this->turnNumber,$this->Armies);
+		$this->Map = $Map;
 		$this->Rules = $Rules;
+		
 	}
 	
 	function getCurrentTurnNumber()

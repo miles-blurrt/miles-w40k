@@ -7,6 +7,10 @@ class Unit
 	private $hasEngagedCloseCombatThisTurn = false;
 	private $id;
 	private $chargingDistance;
+	private $arrivingAsReserve = false;
+	private $isPinned = false;
+	private $isRetreating = false;
+	private $hasEnteredBattleSpace = false;
 	
 	public function __construct(array $ModelArray=null,$RollingDice=null)
 	{
@@ -18,6 +22,36 @@ class Unit
 			$this->RollingDice = $RollingDice;
 		
 		$this->id = spl_object_hash($this);
+	}
+	
+	public function hasEnteredBattleSpace()
+	{
+		return($this->hasEnteredBattleSpace);
+	}
+	public function enterBattleSpace()
+	{
+		$this->hasEnteredBattleSpace = true;
+	}
+	
+	public function arrivingAsReserve()
+	{
+		return($this->arrivingAsReserve);
+	}
+	
+	public function canMove()
+	{
+		if($this->isPinned || $this->isRetreating)
+			return(false);
+			
+		return(true);
+	}
+	
+	public function canFire()
+	{
+		if($this->isRetreating)
+			return(false);
+			
+		return(true);
 	}
 	
 	public function isVehicleUnit()

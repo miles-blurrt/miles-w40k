@@ -1,9 +1,20 @@
 <?php
 
-class PhaseMovement
+class PhaseMovement extends Phase
 {
-    public function __construct($argument1)
-    {
-        // TODO: write logic here
-    }
+    public function getUnitPhaseOption($Unit)
+	{
+		$PhaseOption = new PhaseOption('movement');
+		if($Unit->canMove())
+		{
+			$PhaseOption->addOption('move');
+		}
+		return($PhaseOption);
+	}
+	
+	public function performAction($Unit)
+	{
+		
+		
+	}
 }
